@@ -8,12 +8,12 @@ Setup
 
 1.  Install the necessary dependencies:
     
-        `pip install -r requirements.txt`
+        pip install -r requirements.txt
     
 3.  Set up models and datasets:
     
-        `bash get_models.sh`
+        bash get_models.sh
     
 4. Start JupyterLab:
 
-        `./examples/start-jupyterlab.sh`
+        ./examples/start-jupyterlab.sh
