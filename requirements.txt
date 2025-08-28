@@ -19,3 +19,6 @@ gradio==5.34.2
 plotly==5.24.1
 pandas==2.2.3
 openpyxl==3.1.5
+
+# Jupyter Lab Theme
+jupyterlab-horizon-theme
