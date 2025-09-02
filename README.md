@@ -10,12 +10,10 @@ Setup
     
         pip install -r requirements.txt
     
-2.  Set up models and datasets:
+3.  Set up models and datasets:
     
         bash get_models.sh
     
+4. Start JupyterLab:
 
-Deployment
-----------
-
-Host the `examples` as well as the generated `examples/models` and `examples/datasets` directories on the Brainchip Cloud instance that is available to Brainchip customers.
+        ./examples/start-jupyterlab.sh
