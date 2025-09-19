@@ -1,27 +1,38 @@
-name: Sync colfax branch with main
+name: Create PR to sync colfax with main
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
 
 jobs:
-  sync:
+  sync-colfax:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Sync colfax branch with main
+      - name: Create sync branch
         run: |
-          git checkout colfax
-          git merge main --no-edit
-          git push origin colfax
+          git fetch origin
+          git checkout -b sync-colfax origin/main
+          git push origin sync-colfax
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Sync colfax with main"
+          body: "Automated PR to sync colfax with latest changes from main"
+          head: sync-colfax
+          base: colfax
