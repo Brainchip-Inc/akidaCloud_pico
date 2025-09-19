@@ -8,6 +8,7 @@ Setup
 
 1.  Install the necessary dependencies:
     
+        conda install -c conda-forge jupyterlab
         pip install -r requirements.txt
     
 3.  Set up models and datasets:
