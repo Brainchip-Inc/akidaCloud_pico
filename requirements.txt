@@ -7,7 +7,7 @@ scikit-learn
 tensorflow-datasets
 accelerate
 torchinfo
-textwrap
+# textwrap
 
 # Akida packages
 akida ~= 2.19.1
