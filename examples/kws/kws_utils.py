@@ -9,7 +9,9 @@ import textwrap
 import numpy as np
 
 # SC10 (Speech Commands 10-class) label order
-LABEL_NAMES = ['down', 'go', 'left', 'no', 'off', 'on', 'right', 'stop', 'up', 'yes']
+# LABEL_NAMES = ['down', 'go', 'left', 'no', 'off', 'on', 'right', 'stop', 'up', 'yes']
+LABEL_NAMES = ['down', 'go', 'left', 'no', 'off', 'on', 'right', 'stop', 'up', 'yes', 'silence', 'unknown']
+
 SAMPLE_RATE = 16000  # Speech Commands is 16 kHz
 
 
@@ -963,4 +965,103 @@ def preprocess_sc10(num_test=500, length=16384, target_sample_rate=16000):
         y_list.append(label_to_idx[keyword])
     X_test = np.stack(X_list)[..., np.newaxis]
     y_test = np.array(y_list)
+    return X_test, y_test
+
+
+def evaluate_stateful_full(
+    X_test,
+    y_test,
+    model,
+    length=16384,
+    timestep=256,
+    in_akida=None,
+    smooth_window=0,
+    response_frames=None,
+    verbose=1,
+):
+    """
+    Evaluate the stateful model on the full test set (frame-by-frame, one clip at a time).
+
+    Builds the dataset, runs evaluate_stateful_model, returns accuracy.
+
+    Args:
+        in_akida: If None (default), auto-detect from model type. Set True/False to override.
+        smooth_window: If > 0, apply sliding-window smoothing to (64 or first N) frame
+            logits, then mean and argmax. 0 = no smoothing.
+        response_frames: If set (e.g. 16, 32), use only first N frame logits per segment
+            (fast response). None = use all 64 frames.
+    """
+    try:
+        import akida
+        _in_akida = isinstance(model, akida.Model)
+    except ImportError:
+        _in_akida = False
+    if in_akida is not None:
+        _in_akida = in_akida
+
+    val_ds, total_steps, segments_per_sample = build_stateful_eval_dataset(
+        X_test, y_test, length=length, timestep=timestep
+    )
+    if verbose:
+        N = X_test.shape[0]
+        print(f"Evaluating stateful model on {N} clips ({total_steps} steps)...")
+        if response_frames is not None:
+            if response_frames >= segments_per_sample:
+                print(f"Using full segment ({segments_per_sample} frames).", end="")
+            else:
+                print(f"Fast response: first {response_frames} frame logits per segment.", end="")
+            if smooth_window > 0:
+                print(f" Sliding window smoothing: {smooth_window}.")
+            else:
+                print()
+        elif smooth_window > 0:
+            print(f"Sliding-window smoothing (window={smooth_window}) on raw logits, then mean over segment.")
+    return evaluate_stateful_model(
+        model,
+        val_ds,
+        total_steps,
+        segments_per_sample,
+        in_akida=_in_akida,
+        smooth_window=smooth_window,
+        response_frames=response_frames,
+    )
+
+
+def load_sc12_test_data(length=16384, sample_rate=16000):
+    """
+    Load the full 12-class Speech Commands test set from the locally cached TFDS dataset.
+
+    Returns X_test (n, length, 1) float32 and y_test (n,) int with TFDS class indices:
+      0-9  = keywords (down, go, left, no, off, on, right, stop, up, yes)
+      10   = silence
+      11   = unknown
+
+    Labels are kept as TFDS indices directly — no remapping — so they match the model's
+    output space (model was trained with data['label'].numpy(), no remapping).
+    """
+    import tensorflow_datasets as tfds
+
+    builder = tfds.builder("speech_commands")
+    ds = builder.as_dataset(split="test", as_supervised=False)
+    tfds_label_names = builder.info.features["label"].names
+
+    # Keep only the 12 SC classes (10 keywords + silence + unknown)
+    sc12_names = set(LABEL_NAMES[:10]) | {"_unknown_", "_silence_"}
+    valid_indices = {i for i, name in enumerate(tfds_label_names) if name in sc12_names}
+
+    X_list, y_list = [], []
+    for ex in ds:
+        tfds_idx = int(ex["label"].numpy())
+        if tfds_idx not in valid_indices:
+            continue
+        wav = ex["audio"].numpy().astype(np.float32)  # keep raw int16 range to match X_test.npy
+        if len(wav) < length:
+            wav = np.pad(wav, (0, length - len(wav)))
+        else:
+            wav = wav[:length]
+        X_list.append(wav)
+        y_list.append(tfds_idx)  # use TFDS index directly — matches model output space
+
+    X_test = np.stack(X_list)[..., np.newaxis].astype(np.float32)
+    y_test = np.array(y_list, dtype=np.int64)
     return X_test, y_test
