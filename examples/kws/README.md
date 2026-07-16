@@ -24,8 +24,10 @@ kws/
 
 ## Quick start
 
-1. **Prerequisites:** Python with `akida`, `akida_models`, `quantizeml`, `cnn2snn`, `tensorflow`, `tensorflow_datasets`, `numpy`, `matplotlib`.
-2. **Pico:** Connect Pico via USB. Check with `akida devices`.
+1. **Prerequisites:**
+    - Python packages: `akida`, `akida_models`, `quantizeml`, `cnn2snn`, `tensorflow`, `tensorflow_datasets`, `numpy`, `matplotlib`.
+    - System binary: `ffmpeg` (provides `ffprobe`, used by `tensorflow_datasets` to prepare the Speech Commands dataset on first run). Install with `conda install -c conda-forge ffmpeg`. Already installed on Akida Cloud hosts.
+2. **Pico:** The Pico FPGA is already attached to the host. Verify it is visible with `akida devices` (or `import akida; akida.devices()` inside Python).
 3. **Run:** Open `kws_sc12.ipynb` and run all cells in order (or **Run All**).
 
 ## Test data
@@ -50,7 +52,7 @@ No `X_test.npy` / `y_test.npy` files are needed.
 ## Pipeline overview
 
 1. **Load test data** from TFDS (12 classes, 16-kHz, 1-second clips)
-2. **Load model and weights** — `akida_models.tenn_recurrent_sc10(num_classes=12)` + `weights/tenn_recurrent_sc12.h5`
+2. **Load model and weights** — `akida_models.tenn_recurrent_sc12()` + `weights/tenn_recurrent_sc12.h5`
 3. **Stateful conversion** — rewrite the model to consume 256-sample chunks while carrying state
 4. **Quantize** to int8 weights / int8 activations / int16 input using calibration data
 5. **Convert to Akida** and **map** to the Pico device

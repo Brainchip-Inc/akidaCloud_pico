@@ -1,20 +1,23 @@
 Overview
 --------
 
-This repository provides examples for deploying machine learning tasks, such as image classification and object detection, on the Akida 2 FPGA cloud platform.
+This repository provides examples for deploying machine learning tasks, such as key word spotting, on the Akida Pico FPGA cloud platform.
 
 Setup
 -----
 
 1.  Install the necessary dependencies:
-    
-        conda install -c conda-forge jupyterlab
+
+        # System binaries (ffmpeg is required by tensorflow_datasets for the Speech Commands dataset)
+        conda install -c conda-forge jupyterlab ffmpeg
         pip install -r requirements.txt
-    
-3.  Set up models and datasets:
-    
-        bash get_models.sh
-    
-4. Start JupyterLab:
+
+2.  Start JupyterLab:
 
         ./examples/start-jupyterlab.sh
+
+Model weights and calibration data needed by the example notebooks are bundled in
+the repository under the corresponding example folders (e.g.
+`examples/kws/weights/` and `examples/kws/calibration/`) — no separate
+download step is required. Example datasets are fetched on first run via
+`tensorflow_datasets`.

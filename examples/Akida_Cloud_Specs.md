@@ -1,15 +1,20 @@
-# 📄⚙️ Akida Cloud Technical Specifications
+# 📄⚙️ Akida Pico FPGA — Technical Specifications
+
+These specs describe the **Akida Pico FPGA cloud platform** — a single-NP Akida Pico IP implemented on a Xilinx FPGA, hosted as a remote workstation accessible via Jupyter Lab. (Distinct from the larger Akida 2.0 cloud configuration, which uses multiple nodes / 24 NPs on a VU13P board.)
 
 ---
 
-### **Akida 2.0 IP Configuration**
+### **Akida Pico IP Configuration**
 
 | **Parameter** | **Specification** |
 |---------------|-------------------|
-| **Clock Frequency** | 25 MHz |
-| **Nodes** | 6 x Akida Nodes |
-| **Neural Processors (NPs)** | 24 Total NPs |
-| **Architecture** | Akida 2.0 Neuromorphic Processing |
+| **IP Version** | Akida **Pico** (`IpVersion.pico`) |
+| **Device Version** | `BC.B1.001.000` |
+| **Vendor ID / Product ID** | 188 / 177 |
+| **Nodes** | 1 |
+| **Neural Processors (NPs)** | 1 (`Type.TNP_R`) |
+| **Reference Clock** | 50 MHz nominal (configurable 25–100 MHz in the demos) |
+| **Akida Runtime** | `akida` 2.19.1 |
 | **Documentation** | [Akida Documentation](https://doc.brainchipinc.com/index.html#overview) |
 
 ---
@@ -18,10 +23,11 @@
 
 | **Component** | **Specification** |
 |---------------|-------------------|
-| **Board** | BittWare XUP-VV8 |
-| **FPGA** | Xilinx Virtex UltraScale+ VU13P |
-| **Form Factor** | PCIe Card |
-| **Manufacturer** | [BittWare](https://www.bittware.com/products/xup-vv8/) |
+| **FPGA Vendor** | Xilinx |
+| **PCIe Device ID** | `10ee:4b28` (subsystem `10ee:4340`) |
+| **Form Factor** | PCIe card |
+| **Host Driver** | `xdma` (kernel modules: `xdma`, `xdma_akida`, `xdma_aethercore`) |
+| **BARs** | 4 MB main region + 64 KB control region |
 
 ---
 
@@ -31,10 +37,9 @@
 |---------------|-------------------|
 | **Operating System** | Ubuntu 22.04.5 LTS x86_64 |
 | **Kernel Version** | 6.8.0-60-generic |
-| **Processor** | 12th Gen Intel Core i7-12700K |
-| **CPU Cores** | 20 Cores @ 4.900GHz |
-| **Memory** | 32GB DDR4 |
-| **Graphics** | Intel AlderLake-S GT1 |
+| **Processor** | 11th Gen Intel Core i7-11700B @ 3.20 GHz (boost 4.90 GHz) |
+| **CPU Cores / Threads** | 8 cores / 16 threads (1 socket) |
+| **Memory** | 62 GB |
 
 ---
 
@@ -43,11 +48,13 @@
 | **Tool** | **Version/Type** |
 |----------|------------------|
 | **Interface** | Jupyter Lab |
-| **Python Support** | Full Python ecosystem |
+| **Python Support** | Full Python ecosystem (conda environments) |
 | **Terminal Access** | Bash shell via web interface |
 | **File Transfer** | Web-based drag & drop |
-| **Code Examples** | Pre-loaded demonstration notebooks |
+| **Code Examples** | Pre-loaded demonstration notebooks (KWS, etc.) |
+| **System Binaries** | `ffmpeg` / `ffprobe` (required by `tensorflow_datasets` for first-run dataset prep) |
 
 ---
+
 
 *For detailed technical documentation and API references, visit the [Akida Documentation Portal](https://doc.brainchipinc.com/index.html#overview)*
