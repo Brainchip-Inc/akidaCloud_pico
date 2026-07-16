@@ -1,6 +1,6 @@
 # 📄⚙️ Akida Pico FPGA — Technical Specifications
 
-These specs describe the **Akida Pico FPGA cloud platform** — a single-NP Akida Pico IP implemented on a Xilinx FPGA, hosted as a remote workstation accessible via Jupyter Lab. (Distinct from the larger Akida 2.0 cloud configuration, which uses multiple nodes / 24 NPs on a VU13P board.)
+These specs describe the **Akida Pico FPGA cloud platform** — a single-NP Akida Pico IP implemented on a Xilinx FPGA, hosted as a remote workstation accessible via Jupyter Lab.
 
 ---
 
