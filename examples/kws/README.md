@@ -24,8 +24,10 @@ kws/
 
 ## Quick start
 
-1. **Prerequisites:** Python with `akida`, `akida_models`, `quantizeml`, `cnn2snn`, `tensorflow`, `tensorflow_datasets`, `numpy`, `matplotlib`.
-2. **Pico:** Connect Pico via USB. Check with `akida devices`.
+1. **Prerequisites:**
+    - Python packages: `akida`, `akida_models`, `quantizeml`, `cnn2snn`, `tensorflow`, `tensorflow_datasets`, `numpy`, `matplotlib`.
+    - System binary: `ffmpeg` (provides `ffprobe`, used by `tensorflow_datasets` to prepare the Speech Commands dataset on first run). Install with `conda install -c conda-forge ffmpeg`. Already installed on Akida Cloud hosts.
+2. **Pico:** The Pico FPGA is already attached to the host. Verify it is visible with `akida devices` (or `import akida; akida.devices()` inside Python).
 3. **Run:** Open `kws_sc12.ipynb` and run all cells in order (or **Run All**).
 
 ## Test data

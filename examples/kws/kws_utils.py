@@ -1029,7 +1029,10 @@ def evaluate_stateful_full(
 
 def load_sc12_test_data(length=16384, sample_rate=16000):
     """
-    Load the full 12-class Speech Commands test set from the locally cached TFDS dataset.
+    Load the full 12-class Speech Commands test set via TFDS.
+
+    On the first call, the Speech Commands v0.02 dataset is downloaded (~2 GB) and
+    cached to ~/tensorflow_datasets/speech_commands/. Subsequent calls reuse the cache.
 
     Returns X_test (n, length, 1) float32 and y_test (n,) int with TFDS class indices:
       0-9  = keywords (down, go, left, no, off, on, right, stop, up, yes)
@@ -1042,6 +1045,13 @@ def load_sc12_test_data(length=16384, sample_rate=16000):
     import tensorflow_datasets as tfds
 
     builder = tfds.builder("speech_commands")
+    cache_dir = builder.data_dir
+    if not os.path.isdir(cache_dir):
+        print(
+            f"Speech Commands dataset not found at {cache_dir}.\n"
+            "Downloading and preparing it now (~2 GB; one-time, cached for future runs)..."
+        )
+    builder.download_and_prepare()
     ds = builder.as_dataset(split="test", as_supervised=False)
     tfds_label_names = builder.info.features["label"].names
 
