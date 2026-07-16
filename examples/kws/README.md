@@ -52,7 +52,7 @@ No `X_test.npy` / `y_test.npy` files are needed.
 ## Pipeline overview
 
 1. **Load test data** from TFDS (12 classes, 16-kHz, 1-second clips)
-2. **Load model and weights** — `akida_models.tenn_recurrent_sc10(num_classes=12)` + `weights/tenn_recurrent_sc12.h5`
+2. **Load model and weights** — `akida_models.tenn_recurrent_sc12()` + `weights/tenn_recurrent_sc12.h5`
 3. **Stateful conversion** — rewrite the model to consume 256-sample chunks while carrying state
 4. **Quantize** to int8 weights / int8 activations / int16 input using calibration data
 5. **Convert to Akida** and **map** to the Pico device

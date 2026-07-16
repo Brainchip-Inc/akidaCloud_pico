@@ -870,67 +870,6 @@ def evaluate_stateful_model(
     return accuracy
 
 
-def evaluate_stateful_full(
-    X_test,
-    y_test,
-    model,
-    length=16384,
-    timestep=256,
-    in_akida=None,
-    smooth_window=0,
-    response_frames=None,
-    verbose=1,
-):
-    """
-    Evaluate the stateful model on the full test set (frame-by-frame, one clip at a time).
-
-    Builds the dataset, runs evaluate_stateful_model, returns accuracy.
-
-    Args:
-        in_akida: If None (default), auto-detect from model type. Set True/False to override.
-        smooth_window: If > 0, apply sliding-window smoothing to (64 or first N) frame
-            logits, then mean and argmax. 0 = no smoothing.
-        response_frames: If set (e.g. 16, 32), use only first N frame logits per segment
-            (fast response). None = use all 64 frames.
-    """
-    try:
-        import akida
-        _in_akida = isinstance(model, akida.Model)
-    except ImportError:
-        _in_akida = False
-    if in_akida is not None:
-        _in_akida = in_akida
-
-    val_ds, total_steps, segments_per_sample = build_stateful_eval_dataset(
-        X_test, y_test, length=length, timestep=timestep
-    )
-    if verbose:
-        N = X_test.shape[0]
-        print(f"Evaluating stateful model on {N} clips ({total_steps} steps)...")
-        if response_frames is not None:
-            if response_frames >= segments_per_sample:
-                print(f"Using full segment ({segments_per_sample} frames).", end="")
-            else:
-                print(f"Fast response: first {response_frames} frame logits per segment.", end="")
-            if smooth_window > 0:
-                print(f" Sliding window smoothing: {smooth_window}.")
-            else:
-                print()
-        elif smooth_window > 0:
-            print(f"Sliding-window smoothing (window={smooth_window}) on raw logits, then mean over segment.")
-    return evaluate_stateful_model(
-        model,
-        val_ds,
-        total_steps,
-        segments_per_sample,
-        in_akida=_in_akida,
-        smooth_window=smooth_window,
-        response_frames=response_frames,
-    )
-
-
-
-
 def preprocess_sc10(num_test=500, length=16384, target_sample_rate=16000):
     """
     [Optional] Load Speech Commands v0.02 from TensorFlow Datasets and return

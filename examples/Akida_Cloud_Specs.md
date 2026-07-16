@@ -14,7 +14,7 @@ These specs describe the **Akida Pico FPGA cloud platform** — a single-NP Akid
 | **Nodes** | 1 |
 | **Neural Processors (NPs)** | 1 (`Type.TNP_R`) |
 | **Reference Clock** | 50 MHz nominal (configurable 25–100 MHz in the demos) |
-| **Akida Runtime** | `akida` 2.19.0 |
+| **Akida Runtime** | `akida` 2.19.1 |
 | **Documentation** | [Akida Documentation](https://doc.brainchipinc.com/index.html#overview) |
 
 ---
