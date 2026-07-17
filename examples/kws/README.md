@@ -34,8 +34,6 @@ kws/
 
 The notebook loads the SC12 test set automatically from **TensorFlow Datasets** (`tfds.builder("speech_commands")`). On the first run, TFDS downloads the dataset (~2 GB) and caches it locally to `~/tensorflow_datasets/`. Subsequent runs use the cache — no internet required after the first download.
 
-No `X_test.npy` / `y_test.npy` files are needed.
-
 ## What `kws_utils.py` provides (functions used by the notebook)
 
 - **Data loading:** `load_sc12_test_data()` — loads the 12-class test set from TFDS
