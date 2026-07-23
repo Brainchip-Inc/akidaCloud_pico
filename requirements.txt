@@ -1,24 +1,15 @@
-opencv-python==4.11.0.86
+# Akida (MetaTF) toolchain — https://doc.brainchipinc.com/index.html
+akida ~= 2.19.2
+cnn2snn ~= 2.19.2
+akida_models ~= 1.14.1
 
-# Akida examples requirements
+# Scientific computing & plotting
 matplotlib
-mediapy
 scikit-learn
+h5py
+
+# Dataset loader for the Keyword Spotting example (Speech Commands via TFDS)
 tensorflow-datasets
-accelerate
-torchinfo
-# textwrap
 
-# Akida packages
-akida ~= 2.19.1
-cnn2snn ~= 2.19.1
-akida_models ~= 1.13.1
-
-# Visual Wake Word Gradio Example
-gradio==5.34.2
-plotly==5.24.1
-pandas==2.2.3
-openpyxl==3.1.5
-
-# Jupyter Lab Theme
+# JupyterLab theme
 jupyterlab-horizon-theme
